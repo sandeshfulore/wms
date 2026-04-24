@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <script src="/_sdk/data_sdk.js"></script>
@@ -62,7 +63,8 @@
   <style>body { box-sizing: border-box; }</style>
  </head>
  <body>
-  <div class="app-wrapper"><!-- SIDEBAR -->
+  <div class="app-wrapper">
+   <!-- SIDEBAR -->
    <div class="sidebar">
     <div class="sidebar-header">
      <div class="sidebar-title">
@@ -70,17 +72,23 @@
      </div>
     </div>
     <div class="nav-menu">
-     <div class="nav-item active" onclick="switchPage('dashboard')"><i data-lucide="layout-dashboard" class="nav-icon"></i> Dashboard
+     <div class="nav-item active" onclick="switchPage('dashboard')">
+      <i data-lucide="layout-dashboard" class="nav-icon"></i> Dashboard
      </div>
-     <div class="nav-item" onclick="switchPage('inventory')"><i data-lucide="package" class="nav-icon"></i> Inventory
+     <div class="nav-item" onclick="switchPage('inventory')">
+      <i data-lucide="package" class="nav-icon"></i> Inventory
      </div>
-     <div class="nav-item" onclick="switchPage('shipments')"><i data-lucide="truck" class="nav-icon"></i> Shipments
+     <div class="nav-item" onclick="switchPage('shipments')">
+      <i data-lucide="truck" class="nav-icon"></i> Shipments
      </div>
-     <div class="nav-item" onclick="switchPage('procurement')"><i data-lucide="shopping-cart" class="nav-icon"></i> Procurement
+     <div class="nav-item" onclick="switchPage('procurement')">
+      <i data-lucide="shopping-cart" class="nav-icon"></i> Procurement
      </div>
-     <div class="nav-item" onclick="switchPage('reports')"><i data-lucide="bar-chart-3" class="nav-icon"></i> Reports
+     <div class="nav-item" onclick="switchPage('reports')">
+      <i data-lucide="bar-chart-3" class="nav-icon"></i> Reports
      </div>
-     <div class="nav-item" onclick="switchPage('users')"><i data-lucide="users" class="nav-icon"></i> Users
+     <div class="nav-item" onclick="switchPage('users')">
+      <i data-lucide="users" class="nav-icon"></i> Users
      </div>
     </div>
    </div><!-- MAIN CONTENT -->
@@ -91,7 +99,8 @@
      </div>
      <div id="toast-container"></div>
     </div>
-    <div class="content-area"><!-- DASHBOARD PAGE -->
+    <div class="content-area">
+     <!-- DASHBOARD PAGE -->
      <div class="page active" id="dashboard">
       <div class="grid-3">
        <div class="stat-card">
@@ -171,44 +180,56 @@
        <div class="card">
         <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">📊 Inventory Status</h3>
         <div style="display: grid; gap: 12px;">
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">In Stock</span> <span id="in-stock-count" style="color: #10b981; font-weight: 600;">0 items</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">In Stock</span> <span id="in-stock-count" style="color: #10b981; font-weight: 600;">0 items</span>
          </div>
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">Low Stock</span> <span id="low-stock-count" style="color: #f59e0b; font-weight: 600;">0 items</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">Low Stock</span> <span id="low-stock-count" style="color: #f59e0b; font-weight: 600;">0 items</span>
          </div>
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">Out of Stock</span> <span id="out-stock-count" style="color: #ef4444; font-weight: 600;">0 items</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">Out of Stock</span> <span id="out-stock-count" style="color: #ef4444; font-weight: 600;">0 items</span>
          </div>
         </div>
        </div>
        <div class="card">
         <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">📦 Shipment Status</h3>
         <div style="display: grid; gap: 12px;">
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">Inbound (Today)</span> <span id="inbound-today" style="color: #0ea5e9; font-weight: 600;">0 units</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">Inbound (Today)</span> <span id="inbound-today" style="color: #0ea5e9; font-weight: 600;">0 units</span>
          </div>
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">Outbound (Today)</span> <span id="outbound-today" style="color: #0ea5e9; font-weight: 600;">0 units</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">Outbound (Today)</span> <span id="outbound-today" style="color: #0ea5e9; font-weight: 600;">0 units</span>
          </div>
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">In-Transit</span> <span id="in-transit" style="color: #f59e0b; font-weight: 600;">0 shipments</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">In-Transit</span> <span id="in-transit" style="color: #f59e0b; font-weight: 600;">0 shipments</span>
          </div>
         </div>
        </div>
        <div class="card">
         <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">🛒 GRN Tracking</h3>
         <div style="display: grid; gap: 12px;">
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">Good Condition</span> <span id="grn-good" style="color: #10b981; font-weight: 600;">0 GRN</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">Good Condition</span> <span id="grn-good" style="color: #10b981; font-weight: 600;">0 GRN</span>
          </div>
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">Partial/Damaged</span> <span id="grn-issue" style="color: #ef4444; font-weight: 600;">0 GRN</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">Partial/Damaged</span> <span id="grn-issue" style="color: #ef4444; font-weight: 600;">0 GRN</span>
          </div>
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">Avg GRN Value</span> <span id="avg-grn-value" style="color: #0ea5e9; font-weight: 600;">₹0</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">Avg GRN Value</span> <span id="avg-grn-value" style="color: #0ea5e9; font-weight: 600;">₹0</span>
          </div>
         </div>
        </div>
        <div class="card">
         <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">👥 Team Activity</h3>
         <div style="display: grid; gap: 12px;">
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">Admins</span> <span id="admin-count" style="color: #0ea5e9; font-weight: 600;">0</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">Admins</span> <span id="admin-count" style="color: #0ea5e9; font-weight: 600;">0</span>
          </div>
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">Managers</span> <span id="manager-count" style="color: #0ea5e9; font-weight: 600;">0</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">Managers</span> <span id="manager-count" style="color: #0ea5e9; font-weight: 600;">0</span>
          </div>
-         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;"><span style="color: #94a3b8;">Operators</span> <span id="operator-count" style="color: #0ea5e9; font-weight: 600;">0</span>
+         <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(51, 65, 85, 0.3); border-radius: 4px;">
+          <span style="color: #94a3b8;">Operators</span> <span id="operator-count" style="color: #0ea5e9; font-weight: 600;">0</span>
          </div>
         </div>
        </div>
@@ -236,8 +257,7 @@
      <div class="page" id="inventory">
       <div class="card">
        <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Bulk Upload via CSV</h3>
-       <div style="margin-bottom: 16px;">
-        <label class="input-label">Select CSV File</label> <input type="file" id="csv-file" class="input-field" accept=".csv" style="padding: 8px; cursor: pointer;">
+       <div style="margin-bottom: 16px;"><label class="input-label">Select CSV File</label> <input type="file" id="csv-file" class="input-field" accept=".csv" style="padding: 8px; cursor: pointer;">
         <p style="font-size: 11px; color: #64748b; margin-top: 6px;">Format: SKU, Product Name, Category, Quantity, Unit Cost (₹), Location</p>
        </div><button class="btn btn-primary" onclick="uploadCSV()"> <i data-lucide="upload" style="width: 16px; height: 16px;"></i> Upload CSV </button>
        <div id="csv-preview" style="margin-top: 16px;"></div>
@@ -245,31 +265,40 @@
       <div class="card">
        <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Add New Item</h3>
        <div class="form-row">
-        <div class="input-group"><label class="input-label">SKU</label> <input type="text" id="add-sku" class="input-field" placeholder="e.g., SKU-001">
+        <div class="input-group">
+         <label class="input-label">SKU</label> <input type="text" id="add-sku" class="input-field" placeholder="e.g., SKU-001">
         </div>
-        <div class="input-group"><label class="input-label">Product Name</label> <input type="text" id="add-name" class="input-field" placeholder="Product name">
+        <div class="input-group">
+         <label class="input-label">Product Name</label> <input type="text" id="add-name" class="input-field" placeholder="Product name">
         </div>
-        <div class="input-group"><label class="input-label">Category</label> <input type="text" id="add-category" class="input-field" placeholder="Category">
-        </div>
-       </div>
-       <div class="form-row">
-        <div class="input-group"><label class="input-label">Quantity</label> <input type="number" id="add-qty" class="input-field" placeholder="0" min="0">
-        </div>
-        <div class="input-group"><label class="input-label">Unit Cost (₹)</label> <input type="number" id="add-cost" class="input-field" placeholder="0.00" step="0.01" min="0">
-        </div>
-        <div class="input-group"><label class="input-label">Location</label> <input type="text" id="add-loc" class="input-field" placeholder="e.g., A-12">
+        <div class="input-group">
+         <label class="input-label">Category</label> <input type="text" id="add-category" class="input-field" placeholder="Category">
         </div>
        </div>
        <div class="form-row">
-        <div class="input-group"><label class="input-label">Expiry Date</label> <input type="date" id="add-expiry" class="input-field">
+        <div class="input-group">
+         <label class="input-label">Quantity</label> <input type="number" id="add-qty" class="input-field" placeholder="0" min="0">
         </div>
-        <div class="input-group"><label class="input-label">Warranty/Shelf Life (Days)</label> <input type="number" id="add-warranty" class="input-field" placeholder="365" min="1">
+        <div class="input-group">
+         <label class="input-label">Unit Cost (₹)</label> <input type="number" id="add-cost" class="input-field" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div class="input-group">
+         <label class="input-label">Location</label> <input type="text" id="add-loc" class="input-field" placeholder="e.g., A-12">
+        </div>
+       </div>
+       <div class="form-row">
+        <div class="input-group">
+         <label class="input-label">Expiry Date</label> <input type="date" id="add-expiry" class="input-field">
+        </div>
+        <div class="input-group">
+         <label class="input-label">Warranty/Shelf Life (Days)</label> <input type="number" id="add-warranty" class="input-field" placeholder="365" min="1">
         </div>
        </div><button class="btn btn-primary" onclick="addInventoryItem()"> <i data-lucide="plus" style="width: 16px; height: 16px;"></i> Add Item </button>
       </div>
       <div class="card">
        <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Inventory List</h3>
-       <div class="form-row" style="margin-bottom: 16px;"><input type="text" id="inv-search" class="input-field" placeholder="Search by SKU..." onkeyup="renderInventory()"> <select id="inv-location-filter" class="input-field" onchange="renderInventory()"> <option value="">All Locations</option> <option value="A-12">A-12</option> <option value="B-05">B-05</option> <option value="C-08">C-08</option> </select>
+       <div class="form-row" style="margin-bottom: 16px;">
+        <input type="text" id="inv-search" class="input-field" placeholder="Search by SKU..." onkeyup="renderInventory()"> <select id="inv-location-filter" class="input-field" onchange="renderInventory()"> <option value="">All Locations</option> <option value="A-12">A-12</option> <option value="B-05">B-05</option> <option value="C-08">C-08</option> </select>
        </div>
        <table>
         <thead>
@@ -295,20 +324,26 @@
       <div class="grid-2">
        <div class="card">
         <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Log Inbound Shipment</h3>
-        <div class="input-group"><label class="input-label">SKU</label> <input type="text" id="in-sku" class="input-field" placeholder="SKU-001">
+        <div class="input-group">
+         <label class="input-label">SKU</label> <input type="text" id="in-sku" class="input-field" placeholder="SKU-001">
         </div>
-        <div class="input-group"><label class="input-label">Quantity</label> <input type="number" id="in-qty" class="input-field" placeholder="0" min="0">
+        <div class="input-group">
+         <label class="input-label">Quantity</label> <input type="number" id="in-qty" class="input-field" placeholder="0" min="0">
         </div>
-        <div class="input-group"><label class="input-label">Location</label> <input type="text" id="in-loc" class="input-field" placeholder="A-12">
+        <div class="input-group">
+         <label class="input-label">Location</label> <input type="text" id="in-loc" class="input-field" placeholder="A-12">
         </div><button class="btn btn-primary" onclick="logInbound()"> <i data-lucide="arrow-down" style="width: 16px; height: 16px;"></i> Log Inbound </button>
        </div>
        <div class="card">
         <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Log Outbound Shipment</h3>
-        <div class="input-group"><label class="input-label">SKU</label> <input type="text" id="out-sku" class="input-field" placeholder="SKU-001">
+        <div class="input-group">
+         <label class="input-label">SKU</label> <input type="text" id="out-sku" class="input-field" placeholder="SKU-001">
         </div>
-        <div class="input-group"><label class="input-label">Quantity</label> <input type="number" id="out-qty" class="input-field" placeholder="0" min="0">
+        <div class="input-group">
+         <label class="input-label">Quantity</label> <input type="number" id="out-qty" class="input-field" placeholder="0" min="0">
         </div>
-        <div class="input-group"><label class="input-label">Destination</label> <input type="text" id="out-dest" class="input-field" placeholder="Customer/Location">
+        <div class="input-group">
+         <label class="input-label">Destination</label> <input type="text" id="out-dest" class="input-field" placeholder="Customer/Location">
         </div><button class="btn btn-primary" onclick="logOutbound()"> <i data-lucide="arrow-up" style="width: 16px; height: 16px;"></i> Log Outbound </button>
        </div>
       </div>
@@ -332,31 +367,39 @@
        </table>
        <div class="card">
         <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Bulk Upload Inbound Shipments</h3>
-        <div style="margin-bottom: 16px;"><label class="input-label">Select CSV File</label> <input type="file" id="inbound-csv-file" class="input-field" accept=".csv" style="padding: 8px; cursor: pointer;">
+        <div style="margin-bottom: 16px;">
+         <label class="input-label">Select CSV File</label> <input type="file" id="inbound-csv-file" class="input-field" accept=".csv" style="padding: 8px; cursor: pointer;">
          <p style="font-size: 11px; color: #64748b; margin-top: 6px;">Format: Date, SKU, Quantity, Location</p>
         </div>
-        <div style="display: flex; gap: 8px;"><button class="btn btn-primary" onclick="uploadInboundCSV()"> <i data-lucide="upload" style="width: 16px; height: 16px;"></i> Upload CSV </button> <button class="btn btn-secondary" onclick="downloadInboundTemplate()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download Template </button>
+        <div style="display: flex; gap: 8px;">
+         <button class="btn btn-primary" onclick="uploadInboundCSV()"> <i data-lucide="upload" style="width: 16px; height: 16px;"></i> Upload CSV </button> <button class="btn btn-secondary" onclick="downloadInboundTemplate()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download Template </button>
         </div>
         <div id="inbound-csv-preview" style="margin-top: 16px;"></div>
        </div>
        <div class="card">
         <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Bulk Upload Outbound Shipments</h3>
-        <div style="margin-bottom: 16px;"><label class="input-label">Select CSV File</label> <input type="file" id="outbound-csv-file" class="input-field" accept=".csv" style="padding: 8px; cursor: pointer;">
+        <div style="margin-bottom: 16px;">
+         <label class="input-label">Select CSV File</label> <input type="file" id="outbound-csv-file" class="input-field" accept=".csv" style="padding: 8px; cursor: pointer;">
          <p style="font-size: 11px; color: #64748b; margin-top: 6px;">Format: Date, SKU, Quantity, Destination</p>
         </div>
-        <div style="display: flex; gap: 8px;"><button class="btn btn-primary" onclick="uploadOutboundCSV()"> <i data-lucide="upload" style="width: 16px; height: 16px;"></i> Upload CSV </button> <button class="btn btn-secondary" onclick="downloadOutboundTemplate()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download Template </button>
+        <div style="display: flex; gap: 8px;">
+         <button class="btn btn-primary" onclick="uploadOutboundCSV()"> <i data-lucide="upload" style="width: 16px; height: 16px;"></i> Upload CSV </button> <button class="btn btn-secondary" onclick="downloadOutboundTemplate()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download Template </button>
         </div>
         <div id="outbound-csv-preview" style="margin-top: 16px;"></div>
        </div>
        <div class="card">
         <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Log Return/Reverse Shipment</h3>
-        <div class="input-group"><label class="input-label">SKU</label> <input type="text" id="return-sku" class="input-field" placeholder="SKU-001">
+        <div class="input-group">
+         <label class="input-label">SKU</label> <input type="text" id="return-sku" class="input-field" placeholder="SKU-001">
         </div>
-        <div class="input-group"><label class="input-label">Quantity</label> <input type="number" id="return-qty" class="input-field" placeholder="0" min="0">
+        <div class="input-group">
+         <label class="input-label">Quantity</label> <input type="number" id="return-qty" class="input-field" placeholder="0" min="0">
         </div>
-        <div class="input-group"><label class="input-label">Return Reason</label> <select id="return-reason" class="input-field"> <option value="">Select Reason</option> <option value="Damaged">Damaged</option> <option value="Defective">Defective</option> <option value="Wrong Item">Wrong Item</option> <option value="Expired">Expired</option> <option value="Customer Return">Customer Return</option> <option value="Quality Issue">Quality Issue</option> </select>
+        <div class="input-group">
+         <label class="input-label">Return Reason</label> <select id="return-reason" class="input-field"> <option value="">Select Reason</option> <option value="Damaged">Damaged</option> <option value="Defective">Defective</option> <option value="Wrong Item">Wrong Item</option> <option value="Expired">Expired</option> <option value="Customer Return">Customer Return</option> <option value="Quality Issue">Quality Issue</option> </select>
         </div>
-        <div class="input-group"><label class="input-label">Notes</label> <input type="text" id="return-notes" class="input-field" placeholder="Additional details">
+        <div class="input-group">
+         <label class="input-label">Notes</label> <input type="text" id="return-notes" class="input-field" placeholder="Additional details">
         </div><button class="btn btn-primary" onclick="logReturn()"> <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i> Log Return </button>
        </div>
        <table>
@@ -398,10 +441,12 @@
       </div>
       <div class="card">
        <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Bulk Upload Returns/Reverse Shipments</h3>
-       <div style="margin-bottom: 16px;"><label class="input-label">Select CSV File</label> <input type="file" id="return-csv-file" class="input-field" accept=".csv" style="padding: 8px; cursor: pointer;">
+       <div style="margin-bottom: 16px;">
+        <label class="input-label">Select CSV File</label> <input type="file" id="return-csv-file" class="input-field" accept=".csv" style="padding: 8px; cursor: pointer;">
         <p style="font-size: 11px; color: #64748b; margin-top: 6px;">Format: Date, SKU, Quantity, Return Reason, Notes</p>
        </div>
-       <div style="display: flex; gap: 8px;"><button class="btn btn-primary" onclick="uploadReturnCSV()"> <i data-lucide="upload" style="width: 16px; height: 16px;"></i> Upload CSV </button> <button class="btn btn-secondary" onclick="downloadReturnTemplate()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download Template </button>
+       <div style="display: flex; gap: 8px;">
+        <button class="btn btn-primary" onclick="uploadReturnCSV()"> <i data-lucide="upload" style="width: 16px; height: 16px;"></i> Upload CSV </button> <button class="btn btn-secondary" onclick="downloadReturnTemplate()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download Template </button>
        </div>
        <div id="return-csv-preview" style="margin-top: 16px;"></div>
       </div>
@@ -410,34 +455,42 @@
       <div class="card">
        <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Goods Receipt Note (GRN)</h3>
        <div class="form-row">
-        <div class="input-group"><label class="input-label">GRN Number</label> <input type="text" id="grn-number" class="input-field" placeholder="GRN-001">
+        <div class="input-group">
+         <label class="input-label">GRN Number</label> <input type="text" id="grn-number" class="input-field" placeholder="GRN-001">
         </div>
-        <div class="input-group"><label class="input-label">PO Number</label> <input type="text" id="grn-po" class="input-field" placeholder="PO-001">
+        <div class="input-group">
+         <label class="input-label">PO Number</label> <input type="text" id="grn-po" class="input-field" placeholder="PO-001">
         </div>
-        <div class="input-group"><label class="input-label">Supplier</label> <input type="text" id="grn-supplier" class="input-field" placeholder="Supplier name">
-        </div>
-       </div>
-       <div class="form-row">
-        <div class="input-group"><label class="input-label">SKU</label> <input type="text" id="grn-sku" class="input-field" placeholder="SKU-001">
-        </div>
-        <div class="input-group"><label class="input-label">Product Name</label> <input type="text" id="grn-name" class="input-field" placeholder="Product name">
-        </div>
-        <div class="input-group"><label class="input-label">Received Qty</label> <input type="number" id="grn-qty" class="input-field" placeholder="0" min="0">
+        <div class="input-group">
+         <label class="input-label">Supplier</label> <input type="text" id="grn-supplier" class="input-field" placeholder="Supplier name">
         </div>
        </div>
        <div class="form-row">
-        <div class="input-group"><label class="input-label">Unit Cost (₹)</label> <input type="number" id="grn-cost" class="input-field" placeholder="0.00" step="0.01" min="0">
+        <div class="input-group">
+         <label class="input-label">SKU</label> <input type="text" id="grn-sku" class="input-field" placeholder="SKU-001">
         </div>
-        <div class="input-group"><label class="input-label">Receipt Date</label> <input type="date" id="grn-date" class="input-field">
+        <div class="input-group">
+         <label class="input-label">Product Name</label> <input type="text" id="grn-name" class="input-field" placeholder="Product name">
         </div>
-        <div class="input-group"><label class="input-label">Condition</label> <select id="grn-condition" class="input-field"> <option value="Good">Good</option> <option value="Damaged">Damaged</option> <option value="Partial">Partial</option> </select>
+        <div class="input-group">
+         <label class="input-label">Received Qty</label> <input type="number" id="grn-qty" class="input-field" placeholder="0" min="0">
+        </div>
+       </div>
+       <div class="form-row">
+        <div class="input-group">
+         <label class="input-label">Unit Cost (₹)</label> <input type="number" id="grn-cost" class="input-field" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div class="input-group">
+         <label class="input-label">Receipt Date</label> <input type="date" id="grn-date" class="input-field">
+        </div>
+        <div class="input-group">
+         <label class="input-label">Condition</label> <select id="grn-condition" class="input-field"> <option value="Good">Good</option> <option value="Damaged">Damaged</option> <option value="Partial">Partial</option> </select>
         </div>
        </div><button class="btn btn-primary" onclick="addGRNEntry()"> <i data-lucide="plus" style="width: 16px; height: 16px;"></i> Add GRN Entry </button>
       </div>
       <div class="card">
        <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Bulk Upload GRN via CSV</h3>
-       <div style="margin-bottom: 16px;">
-        <label class="input-label">Select CSV File</label> <input type="file" id="grn-csv-file" class="input-field" accept=".csv" style="padding: 8px; cursor: pointer;">
+       <div style="margin-bottom: 16px;"><label class="input-label">Select CSV File</label> <input type="file" id="grn-csv-file" class="input-field" accept=".csv" style="padding: 8px; cursor: pointer;">
         <p style="font-size: 11px; color: #64748b; margin-top: 6px;">Format: GRN Number, PO Number, Supplier, SKU, Product Name, Received Qty, Unit Cost (₹), Receipt Date, Condition</p>
        </div><button class="btn btn-primary" onclick="uploadGRNCSV()"> <i data-lucide="upload" style="width: 16px; height: 16px;"></i> Upload GRN CSV </button>
        <div id="grn-csv-preview" style="margin-top: 16px;"></div>
@@ -469,11 +522,14 @@
        <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Create Purchase Order</h3>
        <form id="po-form" onsubmit="event.preventDefault(); createPO();">
         <div class="form-row">
-         <div class="input-group"><label class="input-label">PO Number</label> <input type="text" id="po-number" class="input-field" placeholder="PO-001">
+         <div class="input-group">
+          <label class="input-label">PO Number</label> <input type="text" id="po-number" class="input-field" placeholder="PO-001">
          </div>
-         <div class="input-group"><label class="input-label">Supplier</label> <input type="text" id="po-supplier" class="input-field" placeholder="Supplier name">
+         <div class="input-group">
+          <label class="input-label">Supplier</label> <input type="text" id="po-supplier" class="input-field" placeholder="Supplier name">
          </div>
-         <div class="input-group"><label class="input-label">Date</label> <input type="date" id="po-date" class="input-field">
+         <div class="input-group">
+          <label class="input-label">Date</label> <input type="date" id="po-date" class="input-field">
          </div>
         </div>
         <table>
@@ -489,13 +545,15 @@
          <tbody id="po-preview-body">
          </tbody>
         </table>
-        <div style="display: flex; gap: 8px;"><button type="submit" class="btn btn-primary"> <i data-lucide="save" style="width: 16px; height: 16px;"></i> Save PO </button> <button type="button" class="btn btn-secondary" onclick="generatePOPDF()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download PDF </button>
+        <div style="display: flex; gap: 8px;">
+         <button type="submit" class="btn btn-primary"> <i data-lucide="save" style="width: 16px; height: 16px;"></i> Save PO </button> <button type="button" class="btn btn-secondary" onclick="generatePOPDF()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download PDF </button>
         </div>
        </form>
       </div>
      </div><!-- REPORTS PAGE -->
      <div class="page" id="reports">
-      <div class="grid-2"><button class="btn btn-primary" onclick="showInventoryAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="chart-bar" style="width: 20px; height: 20px;"></i> Inventory Analysis </button> <button class="btn btn-primary" onclick="showLowStockAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="alert-triangle" style="width: 20px; height: 20px;"></i> Low Stock Analysis </button> <button class="btn btn-primary" onclick="exportLowStockReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="download" style="width: 20px; height: 20px;"></i> Low Stock Report </button> <button class="btn btn-primary" onclick="exportInventoryReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="download" style="width: 20px; height: 20px;"></i> Inventory Report </button> <button class="btn btn-primary" onclick="exportInboundReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="arrow-down" style="width: 20px; height: 20px;"></i> Inbound Report </button> <button class="btn btn-primary" onclick="exportOutboundReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="arrow-up" style="width: 20px; height: 20px;"></i> Outbound Report </button> <button class="btn btn-primary" onclick="showBarcodeModal()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="barcode" style="width: 20px; height: 20px;"></i> Print Barcodes </button> <button class="btn btn-primary" onclick="showCategoryAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="pie-chart" style="width: 20px; height: 20px;"></i> Category Analysis </button> <button class="btn btn-primary" onclick="showFastUpdate()" style="padding: 16px; justify-content: center; font-size: 14px; background: linear-gradient(135deg, #8b5cf6, #6366f1);"> <i data-lucide="zap" style="width: 20px; height: 20px;"></i> Fast Update </button>
+      <div class="grid-2">
+       <button class="btn btn-primary" onclick="showInventoryAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="chart-bar" style="width: 20px; height: 20px;"></i> Inventory Analysis </button> <button class="btn btn-primary" onclick="showLowStockAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="alert-triangle" style="width: 20px; height: 20px;"></i> Low Stock Analysis </button> <button class="btn btn-primary" onclick="exportLowStockReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="download" style="width: 20px; height: 20px;"></i> Low Stock Report </button> <button class="btn btn-primary" onclick="exportInventoryReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="download" style="width: 20px; height: 20px;"></i> Inventory Report </button> <button class="btn btn-primary" onclick="exportInboundReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="arrow-down" style="width: 20px; height: 20px;"></i> Inbound Report </button> <button class="btn btn-primary" onclick="exportOutboundReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="arrow-up" style="width: 20px; height: 20px;"></i> Outbound Report </button> <button class="btn btn-primary" onclick="showBarcodeModal()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="barcode" style="width: 20px; height: 20px;"></i> Print Barcodes </button> <button class="btn btn-primary" onclick="showCategoryAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="pie-chart" style="width: 20px; height: 20px;"></i> Category Analysis </button> <button class="btn btn-primary" onclick="showFastUpdate()" style="padding: 16px; justify-content: center; font-size: 14px; background: linear-gradient(135deg, #8b5cf6, #6366f1);"> <i data-lucide="zap" style="width: 20px; height: 20px;"></i> Fast Update </button>
       </div>
       <div id="analysis-container"></div>
      </div><!-- FAST UPDATE MODAL -->
@@ -506,19 +564,18 @@
        </div>
        <div style="background: rgba(51, 65, 85, 0.3); border-radius: 8px; padding: 16px; margin-bottom: 20px;">
         <p style="color: #cbd5e1; font-weight: 600; margin-bottom: 12px; font-size: 13px;">Select Data Types to Update</p>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;"><label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="fu-inventory" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 13px;">📦 Inventory</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="fu-inbound" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 13px;">⬇️ Inbound</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="fu-outbound" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 13px;">⬆️ Outbound</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="fu-return" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 13px;">🔄 Returns</span> </label>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+         <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="fu-inventory" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 13px;">📦 Inventory</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="fu-inbound" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 13px;">⬇️ Inbound</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="fu-outbound" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 13px;">⬆️ Outbound</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="fu-return" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 13px;">🔄 Returns</span> </label>
         </div>
        </div>
-       <div style="background: rgba(51, 65, 85, 0.3); border: 2px dashed rgba(148, 163, 184, 0.3); border-radius: 8px; padding: 20px; margin-bottom: 20px; text-align: center;">
-        <i data-lucide="upload-cloud" style="width: 40px; height: 40px; color: #0ea5e9; margin-bottom: 8px; display: block;"></i>
+       <div style="background: rgba(51, 65, 85, 0.3); border: 2px dashed rgba(148, 163, 184, 0.3); border-radius: 8px; padding: 20px; margin-bottom: 20px; text-align: center;"><i data-lucide="upload-cloud" style="width: 40px; height: 40px; color: #0ea5e9; margin-bottom: 8px; display: block;"></i>
         <p style="color: #cbd5e1; margin-bottom: 12px; font-size: 14px;"><strong>Upload CSV files</strong></p>
         <p style="color: #94a3b8; font-size: 12px; margin-bottom: 16px;">Select multiple CSV files matching the selected data types above</p><input type="file" id="fast-update-files" class="input-field" accept=".csv" multiple style="padding: 8px; cursor: pointer; display: none;"> <button class="btn btn-primary" onclick="document.getElementById('fast-update-files').click()"> <i data-lucide="folder-open" style="width: 16px; height: 16px;"></i> Select CSV Files </button>
        </div>
        <div id="fast-update-preview" style="background: rgba(51, 65, 85, 0.3); border-radius: 8px; padding: 16px; margin-bottom: 20px; min-height: 100px;">
         <p style="color: #94a3b8; text-align: center;">No files selected</p>
        </div>
-       <div style="display: flex; gap: 8px; justify-content: flex-end;">
-        <button class="btn btn-secondary" onclick="closeFastUpdateModal()"> Cancel </button> <button class="btn btn-primary" id="fast-update-submit" onclick="processFastUpdate()" disabled> <i data-lucide="zap" style="width: 16px; height: 16px;"></i> Process All Files </button>
+       <div style="display: flex; gap: 8px; justify-content: flex-end;"><button class="btn btn-secondary" onclick="closeFastUpdateModal()"> Cancel </button> <button class="btn btn-primary" id="fast-update-submit" onclick="processFastUpdate()" disabled> <i data-lucide="zap" style="width: 16px; height: 16px;"></i> Process All Files </button>
        </div>
       </div>
      </div><!-- BARCODE MODAL -->
@@ -528,16 +585,18 @@
         <h3 style="color: #f1f5f9; font-size: 18px; font-weight: 600;">Print Barcodes</h3><button class="btn btn-secondary" onclick="closeBarcodeModal()"> <i data-lucide="x" style="width: 16px; height: 16px;"></i> Close </button>
        </div>
        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px;">
-        <div class="input-group"><label class="input-label">Page Format</label> <select id="barcode-page-format" class="input-field" onchange="updateBarcodePreview()"> <option value="a4">A4 (8.5" x 11")</option> <option value="letter">Letter (8.5" x 11")</option> <option value="4x6">4x6 Label</option> <option value="2x3">2x3 Label</option> </select>
+        <div class="input-group">
+         <label class="input-label">Page Format</label> <select id="barcode-page-format" class="input-field" onchange="updateBarcodePreview()"> <option value="a4">A4 (8.5" x 11")</option> <option value="letter">Letter (8.5" x 11")</option> <option value="4x6">4x6 Label</option> <option value="2x3">2x3 Label</option> </select>
         </div>
-        <div class="input-group"><label class="input-label">Barcodes Per Row</label> <input type="number" id="barcode-per-row" class="input-field" value="3" min="1" max="8" onchange="updateBarcodePreview()">
+        <div class="input-group">
+         <label class="input-label">Barcodes Per Row</label> <input type="number" id="barcode-per-row" class="input-field" value="3" min="1" max="8" onchange="updateBarcodePreview()">
         </div>
-        <div class="input-group"><label class="input-label">Barcode Height (mm)</label> <input type="number" id="barcode-height" class="input-field" value="15" min="5" max="50" onchange="updateBarcodePreview()">
+        <div class="input-group">
+         <label class="input-label">Barcode Height (mm)</label> <input type="number" id="barcode-height" class="input-field" value="15" min="5" max="50" onchange="updateBarcodePreview()">
         </div>
        </div>
        <div id="barcode-preview" style="background: white; border: 1px solid #ccc; border-radius: 4px; padding: 20px; margin-bottom: 16px; display: grid; gap: 10px; color: black; font-size: 12px; font-family: monospace;"></div>
-       <div style="display: flex; gap: 8px; justify-content: flex-end;">
-        <button class="btn btn-primary" onclick="printBarcodes()"> <i data-lucide="printer" style="width: 16px; height: 16px;"></i> Print </button> <button class="btn btn-secondary" onclick="downloadBarcodesPDF()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download PDF </button>
+       <div style="display: flex; gap: 8px; justify-content: flex-end;"><button class="btn btn-primary" onclick="printBarcodes()"> <i data-lucide="printer" style="width: 16px; height: 16px;"></i> Print </button> <button class="btn btn-secondary" onclick="downloadBarcodesPDF()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download PDF </button>
        </div>
       </div>
      </div><!-- USERS PAGE -->
@@ -545,15 +604,19 @@
       <div class="card">
        <h3 style="color: #f1f5f9; margin-bottom: 16px; font-size: 16px; font-weight: 600;">Create New User</h3>
        <div class="form-row">
-        <div class="input-group"><label class="input-label">Full Name</label> <input type="text" id="user-full-name" class="input-field" placeholder="John Doe">
+        <div class="input-group">
+         <label class="input-label">Full Name</label> <input type="text" id="user-full-name" class="input-field" placeholder="John Doe">
         </div>
-        <div class="input-group"><label class="input-label">Email</label> <input type="email" id="user-email" class="input-field" placeholder="john@warehouse.com">
+        <div class="input-group">
+         <label class="input-label">Email</label> <input type="email" id="user-email" class="input-field" placeholder="john@warehouse.com">
         </div>
        </div>
        <div class="form-row">
-        <div class="input-group"><label class="input-label">Role</label> <select id="user-role" class="input-field"> <option value="">Select Role</option> <option value="Admin">Admin</option> <option value="Manager">Manager</option> <option value="Operator">Operator</option> <option value="Viewer">Viewer</option> </select>
+        <div class="input-group">
+         <label class="input-label">Role</label> <select id="user-role" class="input-field"> <option value="">Select Role</option> <option value="Admin">Admin</option> <option value="Manager">Manager</option> <option value="Operator">Operator</option> <option value="Viewer">Viewer</option> </select>
         </div>
-        <div class="input-group"><label class="input-label">PIN (4 digits)</label> <input type="text" id="user-pin" class="input-field" placeholder="1234" maxlength="4">
+        <div class="input-group">
+         <label class="input-label">PIN (4 digits)</label> <input type="text" id="user-pin" class="input-field" placeholder="1234" maxlength="4">
         </div>
        </div><button class="btn btn-primary" onclick="createUser()"> <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i> Create User </button>
       </div>
@@ -3119,5 +3182,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f188651353f20fe',t:'MTc3NzA2OTUzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f188f05d3b420fe',t:'MTc3NzA2OTg5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
