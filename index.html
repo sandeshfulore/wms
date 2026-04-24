@@ -1526,58 +1526,71 @@
         }
 
         function generatePOPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const company = window.elementSdk?.config?.company_name || defaultConfig.company_name;
-            const poNum = document.getElementById('po-number').value.trim() || 'PO-DRAFT';
-            const supplier = document.getElementById('po-supplier').value.trim() || 'N/A';
-            const date = document.getElementById('po-date').value || new Date().toISOString().split('T')[0];
+            try {
+                if (!window.jspdf || !window.jspdf.jsPDF) {
+                    showToast('PDF library not available');
+                    return;
+                }
+                
+                const jsPDF = window.jspdf.jsPDF;
+                const doc = new jsPDF();
+                const company = window.elementSdk?.config?.company_name || defaultConfig.company_name;
+                const poNum = document.getElementById('po-number').value.trim() || 'PO-DRAFT';
+                const supplier = document.getElementById('po-supplier').value.trim() || 'N/A';
+                const date = document.getElementById('po-date').value || new Date().toISOString().split('T')[0];
 
-            doc.setFillColor(30, 30, 35);
-            doc.rect(0, 0, 210, 40, 'F');
-            doc.setTextColor(255);
-            doc.setFontSize(20);
-            doc.setFont('helvetica', 'bold');
-            doc.text(company, 15, 20);
-            doc.setFontSize(10);
-            doc.setFont('helvetica', 'normal');
-            doc.text('Purchase Order', 15, 28);
-            doc.setFontSize(14);
-            doc.text(poNum, 195, 20, { align: 'right' });
-            doc.setFontSize(9);
-            doc.text(`Date: ${date}`, 195, 28, { align: 'right' });
-            doc.setTextColor(60);
-            doc.setFontSize(10);
-            doc.text(`Supplier: ${supplier}`, 15, 52);
+                doc.setFillColor(30, 30, 35);
+                doc.rect(0, 0, 210, 40, 'F');
+                doc.setTextColor(255);
+                doc.setFontSize(20);
+                doc.setFont('helvetica', 'bold');
+                doc.text(company, 15, 20);
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.text('Purchase Order', 15, 28);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text(poNum, 195, 20, { align: 'right' });
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Date: ${date}`, 195, 28, { align: 'right' });
+                doc.setTextColor(60);
+                doc.setFontSize(10);
+                doc.text(`Supplier: ${supplier}`, 15, 52);
 
-            const rows = document.querySelectorAll('#po-rows > div');
-            const tableData = [];
-            let grandTotal = 0;
-            rows.forEach(r => {
-                const inputs = r.querySelectorAll('input');
-                const qty = parseFloat(inputs[2].value) || 0;
-                const unit = parseFloat(inputs[3].value) || 0;
-                const lineTotal = qty * unit;
-                grandTotal += lineTotal;
-                tableData.push([inputs[0].value || '—', inputs[1].value || '—', qty, '₹' + unit.toFixed(2), '₹' + lineTotal.toFixed(2)]);
-            });
-            if (tableData.length === 0) tableData.push(['—', 'No items', 0, '₹0.00', '₹0.00']);
+                const rows = document.querySelectorAll('#po-rows > div');
+                const tableData = [];
+                let grandTotal = 0;
+                rows.forEach(r => {
+                    const inputs = r.querySelectorAll('input');
+                    const qty = parseFloat(inputs[2].value) || 0;
+                    const unit = parseFloat(inputs[3].value) || 0;
+                    const lineTotal = qty * unit;
+                    grandTotal += lineTotal;
+                    tableData.push([inputs[0].value || '—', inputs[1].value || '—', qty, '₹' + unit.toFixed(2), '₹' + lineTotal.toFixed(2)]);
+                });
+                if (tableData.length === 0) tableData.push(['—', 'No items', 0, '₹0.00', '₹0.00']);
 
-            doc.autoTable({
-                startY: 60,
-                head: [['SKU', 'Description', 'Qty', 'Unit Price', 'Total']],
-                body: tableData,
-                theme: 'grid',
-                headStyles: { fillColor: [14, 165, 233], textColor: 255, fontStyle: 'bold', fontSize: 9 },
-                styles: { fontSize: 9, cellPadding: 4 }
-            });
+                doc.autoTable({
+                    startY: 60,
+                    head: [['SKU', 'Description', 'Qty', 'Unit Price', 'Total']],
+                    body: tableData,
+                    theme: 'grid',
+                    headStyles: { fillColor: [14, 165, 233], textColor: 255, fontStyle: 'bold', fontSize: 10 },
+                    bodyStyles: { fontSize: 9, cellPadding: 4 },
+                    margin: { left: 15, right: 15 }
+                });
 
-            doc.setFontSize(8);
-            doc.setTextColor(150);
-            doc.text(`Grand Total: ₹${grandTotal.toFixed(2)}`, 15, doc.internal.pageSize.height - 20);
-            doc.text(`Generated by ${company}`, 15, doc.internal.pageSize.height - 10);
-            doc.save(`${poNum}.pdf`);
-            showToast('✓ PDF downloaded');
+                doc.setFontSize(8);
+                doc.setTextColor(150);
+                doc.text(`Grand Total: ₹${grandTotal.toFixed(2)}`, 15, doc.internal.pageSize.height - 20);
+                doc.text(`Generated by ${company}`, 15, doc.internal.pageSize.height - 10);
+                doc.save(`${poNum}.pdf`);
+                showToast('✓ PDF downloaded');
+            } catch (err) {
+                showToast('Error generating PDF: ' + err.message);
+                console.error(err);
+            }
         }
 
         async function createUser() {
@@ -1641,67 +1654,272 @@
             </tr>`).join('');
         }
 
+        function downloadAsCSV(filename, headers, rows) {
+            let csv = headers.join(',') + '\n';
+            rows.forEach(row => {
+                csv += row.map(cell => {
+                    const value = String(cell).replace(/"/g, '""');
+                    return value.includes(',') || value.includes('"') ? `"${value}"` : value;
+                }).join(',') + '\n';
+            });
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        function downloadAsExcel(filename, headers, rows) {
+            let html = '<table><thead><tr>';
+            headers.forEach(h => html += `<th>${h}</th>`);
+            html += '</tr></thead><tbody>';
+            rows.forEach(row => {
+                html += '<tr>';
+                row.forEach(cell => html += `<td>${cell}</td>`);
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(html));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        function downloadAsPDF(filename, title, headers, rows, footerText = '') {
+            try {
+                if (!window.jspdf || !window.jspdf.jsPDF) {
+                    showToast('PDF library not available');
+                    return false;
+                }
+                
+                const jsPDF = window.jspdf.jsPDF;
+                const doc = new jsPDF();
+                
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.text(title, 15, 15);
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Generated: ${new Date().toLocaleString()}`, 15, 25);
+                
+                const tableData = rows.map(row => row.map(cell => String(cell).replace('₹', '')));
+                doc.autoTable({ 
+                    startY: 35, 
+                    head: [headers], 
+                    body: tableData,
+                    theme: 'grid',
+                    headStyles: { fillColor: [14, 165, 233], textColor: 255, fontStyle: 'bold', fontSize: 10 },
+                    bodyStyles: { fontSize: 9, cellPadding: 3 },
+                    margin: { left: 15, right: 15 }
+                });
+                
+                if (footerText) {
+                    doc.setFontSize(9);
+                    doc.text(footerText, 15, doc.internal.pageSize.height - 10);
+                }
+                
+                doc.save(filename);
+                return true;
+            } catch (err) {
+                console.error('PDF error:', err);
+                showToast('Error: ' + err.message);
+                return false;
+            }
+        }
+
+        function showReportFormatModal(reportType) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 3000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: #1e293b; border-radius: 8px; padding: 24px; border: 1px solid rgba(148, 163, 184, 0.2); max-width: 400px; width: 90%;">
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #f1f5f9; font-size: 18px; font-weight: 600; margin-bottom: 8px;">Choose Format</h3>
+                        <p style="color: #94a3b8; font-size: 13px;">Select how you want to download the report:</p>
+                    </div>
+                    
+                    <div style="display: grid; gap: 10px; margin-bottom: 20px;">
+                        <button class="btn btn-primary" onclick="downloadReport('${reportType}', 'csv')" style="justify-content: center;">
+                            <i data-lucide="file-text" style="width: 16px; height: 16px;"></i> Download as CSV
+                        </button>
+                        <button class="btn btn-primary" onclick="downloadReport('${reportType}', 'excel')" style="justify-content: center;">
+                            <i data-lucide="table" style="width: 16px; height: 16px;"></i> Download as Excel
+                        </button>
+                        <button class="btn btn-primary" onclick="downloadReport('${reportType}', 'pdf')" style="justify-content: center;">
+                            <i data-lucide="file-pdf" style="width: 16px; height: 16px;"></i> Download as PDF
+                        </button>
+                    </div>
+                    
+                    <button class="btn btn-secondary" onclick="this.closest('div').parentElement.remove()" style="width: 100%; justify-content: center;">
+                        Cancel
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            lucide.createIcons();
+        }
+
+        function downloadReport(reportType, format) {
+            document.querySelector('[style*="position: fixed"][style*="z-index: 3000"]')?.remove();
+            
+            if (format === 'csv') {
+                downloadReportAsCSV(reportType);
+            } else if (format === 'excel') {
+                downloadReportAsExcel(reportType);
+            } else if (format === 'pdf') {
+                downloadReportAsPDF(reportType);
+            }
+        }
+
+        function downloadReportAsCSV(reportType) {
+            try {
+                if (reportType === 'low-stock') {
+                    const lowStock = inventoryData.filter(i => i.quantity < 50);
+                    if (lowStock.length === 0) { showToast('No low stock items'); return; }
+                    const headers = ['SKU', 'Item Name', 'Quantity', 'Location', 'Category', 'Unit Cost', 'Status'];
+                    const rows = lowStock.map(i => [i.sku, i.name, i.quantity, i.location, i.category, i.unit_cost, i.status]);
+                    downloadAsCSV('Low_Stock_Report.csv', headers, rows);
+                    showToast('✓ CSV downloaded');
+                } else if (reportType === 'inventory') {
+                    if (inventoryData.length === 0) { showToast('No inventory data'); return; }
+                    const headers = ['SKU', 'Name', 'Category', 'Quantity', 'Unit Cost', 'Location', 'Status', 'Date'];
+                    const rows = inventoryData.map(i => [i.sku, i.name, i.category, i.quantity, i.unit_cost, i.location, i.status, i.date]);
+                    downloadAsCSV('Inventory_Report.csv', headers, rows);
+                    showToast('✓ CSV downloaded');
+                } else if (reportType === 'inbound') {
+                    if (inboundData.length === 0) { showToast('No inbound data'); return; }
+                    const headers = ['Date', 'SKU', 'Quantity', 'Location', 'Status'];
+                    const rows = inboundData.map(i => [i.date, i.sku, i.quantity, i.location, i.status]);
+                    downloadAsCSV('Inbound_Report.csv', headers, rows);
+                    showToast('✓ CSV downloaded');
+                } else if (reportType === 'outbound') {
+                    if (outboundData.length === 0) { showToast('No outbound data'); return; }
+                    const headers = ['Date', 'SKU', 'Quantity', 'Destination', 'Status'];
+                    const rows = outboundData.map(i => [i.date, i.sku, i.quantity, i.destination, i.status]);
+                    downloadAsCSV('Outbound_Report.csv', headers, rows);
+                    showToast('✓ CSV downloaded');
+                }
+            } catch (err) {
+                showToast('Error downloading CSV');
+                console.error(err);
+            }
+        }
+
+        function downloadReportAsExcel(reportType) {
+            try {
+                if (reportType === 'low-stock') {
+                    const lowStock = inventoryData.filter(i => i.quantity < 50);
+                    if (lowStock.length === 0) { showToast('No low stock items'); return; }
+                    const headers = ['SKU', 'Item Name', 'Quantity', 'Location', 'Category', 'Unit Cost', 'Status'];
+                    const rows = lowStock.map(i => [i.sku, i.name, i.quantity, i.location, i.category, i.unit_cost, i.status]);
+                    downloadAsExcel('Low_Stock_Report.xls', headers, rows);
+                    showToast('✓ Excel downloaded');
+                } else if (reportType === 'inventory') {
+                    if (inventoryData.length === 0) { showToast('No inventory data'); return; }
+                    const headers = ['SKU', 'Name', 'Category', 'Quantity', 'Unit Cost', 'Location', 'Status', 'Date'];
+                    const rows = inventoryData.map(i => [i.sku, i.name, i.category, i.quantity, i.unit_cost, i.location, i.status, i.date]);
+                    downloadAsExcel('Inventory_Report.xls', headers, rows);
+                    showToast('✓ Excel downloaded');
+                } else if (reportType === 'inbound') {
+                    if (inboundData.length === 0) { showToast('No inbound data'); return; }
+                    const headers = ['Date', 'SKU', 'Quantity', 'Location', 'Status'];
+                    const rows = inboundData.map(i => [i.date, i.sku, i.quantity, i.location, i.status]);
+                    downloadAsExcel('Inbound_Report.xls', headers, rows);
+                    showToast('✓ Excel downloaded');
+                } else if (reportType === 'outbound') {
+                    if (outboundData.length === 0) { showToast('No outbound data'); return; }
+                    const headers = ['Date', 'SKU', 'Quantity', 'Destination', 'Status'];
+                    const rows = outboundData.map(i => [i.date, i.sku, i.quantity, i.destination, i.status]);
+                    downloadAsExcel('Outbound_Report.xls', headers, rows);
+                    showToast('✓ Excel downloaded');
+                }
+            } catch (err) {
+                showToast('Error downloading Excel');
+                console.error(err);
+            }
+        }
+
+        function downloadReportAsPDF(reportType) {
+            try {
+                if (reportType === 'low-stock') {
+                    const lowStock = inventoryData.filter(i => i.quantity < 50);
+                    if (lowStock.length === 0) { showToast('No low stock items'); return; }
+                    const headers = ['SKU', 'Item Name', 'Quantity', 'Location', 'Category'];
+                    const rows = lowStock.slice(0, 100).map(i => [i.sku, i.name, i.quantity, i.location, i.category]);
+                    if (downloadAsPDF('Low_Stock_Report.pdf', 'LOW STOCK ALERT REPORT', headers, rows)) {
+                        showToast('✓ PDF downloaded');
+                    } else {
+                        showToast('Error generating PDF');
+                    }
+                } else if (reportType === 'inventory') {
+                    if (inventoryData.length === 0) { showToast('No inventory data'); return; }
+                    const headers = ['SKU', 'Name', 'Qty', 'Unit Cost', 'Location', 'Status'];
+                    const rows = inventoryData.slice(0, 500).map(i => [i.sku, i.name, i.quantity, '₹' + i.unit_cost, i.location, i.status]);
+                    const totalValue = inventoryData.reduce((sum, i) => sum + (i.quantity * parseFloat(i.unit_cost)), 0);
+                    if (downloadAsPDF('Inventory_Report.pdf', 'INVENTORY REPORT', headers, rows, `Total Value: ₹${totalValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`)) {
+                        showToast('✓ PDF downloaded');
+                    } else {
+                        showToast('Error generating PDF');
+                    }
+                } else if (reportType === 'inbound') {
+                    if (inboundData.length === 0) { showToast('No inbound data'); return; }
+                    const headers = ['Date', 'SKU', 'Quantity', 'Location', 'Status'];
+                    const rows = inboundData.slice(0, 500).map(i => [i.date, i.sku, i.quantity, i.location, i.status]);
+                    const totalQty = inboundData.reduce((sum, i) => sum + i.quantity, 0);
+                    if (downloadAsPDF('Inbound_Report.pdf', 'INBOUND REPORT', headers, rows, `Total Units: ${totalQty.toLocaleString()}`)) {
+                        showToast('✓ PDF downloaded');
+                    } else {
+                        showToast('Error generating PDF');
+                    }
+                } else if (reportType === 'outbound') {
+                    if (outboundData.length === 0) { showToast('No outbound data'); return; }
+                    const headers = ['Date', 'SKU', 'Quantity', 'Destination', 'Status'];
+                    const rows = outboundData.slice(0, 500).map(i => [i.date, i.sku, i.quantity, i.destination, i.status]);
+                    const totalQty = outboundData.reduce((sum, i) => sum + i.quantity, 0);
+                    if (downloadAsPDF('Outbound_Report.pdf', 'OUTBOUND REPORT', headers, rows, `Total Units: ${totalQty.toLocaleString()}`)) {
+                        showToast('✓ PDF downloaded');
+                    } else {
+                        showToast('Error generating PDF');
+                    }
+                }
+            } catch (err) {
+                showToast('Error generating PDF');
+                console.error(err);
+            }
+        }
+
         function exportLowStockReport() {
-            const lowStock = inventoryData.filter(i => i.quantity < 50);
-            if (lowStock.length === 0) { showToast('No low stock items'); return; }
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFontSize(16);
-            doc.text('LOW STOCK ALERT REPORT', 15, 15);
-            doc.setFontSize(10);
-            doc.text(`Generated: ${new Date().toLocaleString()}`, 15, 25);
-            const tableData = lowStock.slice(0, 100).map(i => [i.sku, i.name, i.quantity, i.location, i.category]);
-            doc.autoTable({ startY: 35, head: [['SKU', 'Item Name', 'Quantity', 'Location', 'Category']], body: tableData });
-            doc.save('Low_Stock_Report.pdf');
-            showToast('✓ Report downloaded');
+            showReportFormatModal('low-stock');
         }
 
         function exportInventoryReport() {
-            if (inventoryData.length === 0) { showToast('No inventory data'); return; }
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFontSize(16);
-            doc.text('INVENTORY REPORT', 15, 15);
-            doc.setFontSize(10);
-            doc.text(`Generated: ${new Date().toLocaleString()}`, 15, 25);
-            const tableData = inventoryData.slice(0, 500).map(i => [i.sku, i.name, i.quantity, '₹' + i.unit_cost, i.location, i.status]);
-            const totalValue = inventoryData.reduce((sum, i) => sum + (i.quantity * parseFloat(i.unit_cost)), 0);
-            doc.autoTable({ startY: 35, head: [['SKU', 'Name', 'Qty', 'Unit Cost', 'Location', 'Status']], body: tableData });
-            doc.text(`Total Value: ₹${totalValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, 15, doc.internal.pageSize.height - 10);
-            doc.save('Inventory_Report.pdf');
-            showToast('✓ Report downloaded');
+            showReportFormatModal('inventory');
         }
 
         function exportInboundReport() {
-            if (inboundData.length === 0) { showToast('No inbound data'); return; }
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFontSize(16);
-            doc.text('INBOUND REPORT', 15, 15);
-            doc.setFontSize(10);
-            doc.text(`Generated: ${new Date().toLocaleString()}`, 15, 25);
-            const tableData = inboundData.slice(0, 500).map(i => [i.date, i.sku, i.quantity, i.location, i.status]);
-            const totalQty = inboundData.reduce((sum, i) => sum + i.quantity, 0);
-            doc.autoTable({ startY: 35, head: [['Date', 'SKU', 'Quantity', 'Location', 'Status']], body: tableData });
-            doc.text(`Total Units: ${totalQty.toLocaleString()}`, 15, doc.internal.pageSize.height - 10);
-            doc.save('Inbound_Report.pdf');
-            showToast('✓ Report downloaded');
+            showReportFormatModal('inbound');
         }
 
         function exportOutboundReport() {
-            if (outboundData.length === 0) { showToast('No outbound data'); return; }
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFontSize(16);
-            doc.text('OUTBOUND REPORT', 15, 15);
-            doc.setFontSize(10);
-            doc.text(`Generated: ${new Date().toLocaleString()}`, 15, 25);
-            const tableData = outboundData.slice(0, 500).map(i => [i.date, i.sku, i.quantity, i.destination, i.status]);
-            const totalQty = outboundData.reduce((sum, i) => sum + i.quantity, 0);
-            doc.autoTable({ startY: 35, head: [['Date', 'SKU', 'Quantity', 'Destination', 'Status']], body: tableData });
-            doc.text(`Total Units: ${totalQty.toLocaleString()}`, 15, doc.internal.pageSize.height - 10);
-            doc.save('Outbound_Report.pdf');
-            showToast('✓ Report downloaded');
+            showReportFormatModal('outbound');
         }
 
         function updateDashboard() {
@@ -1985,54 +2203,64 @@
         }
 
         function downloadBarcodesPDF() {
-            const { jsPDF } = window.jspdf;
-            const format = document.getElementById('barcode-page-format').value;
-            const perRow = parseInt(document.getElementById('barcode-per-row').value) || 3;
-
-            let pageWidth = 210, pageHeight = 297; // A4 default
-            if (format === 'letter') { pageWidth = 215.9; pageHeight = 279.4; }
-            if (format === '4x6') { pageWidth = 152.4; pageHeight = 101.6; }
-            if (format === '2x3') { pageWidth = 101.6; pageHeight = 76.2; }
-
-            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [pageWidth, pageHeight] });
-            const margin = 5;
-            const itemWidth = (pageWidth - margin * 2) / perRow;
-            const itemHeight = itemWidth * 0.8;
-
-            let x = margin, y = margin;
-            let itemCount = 0;
-
-            inventoryData.forEach(item => {
-                if (y + itemHeight > pageHeight - margin) {
-                    doc.addPage([pageWidth, pageHeight]);
-                    x = margin;
-                    y = margin;
+            try {
+                if (!window.jspdf || !window.jspdf.jsPDF) {
+                    showToast('PDF library not available');
+                    return;
                 }
+                
+                const jsPDF = window.jspdf.jsPDF;
+                const format = document.getElementById('barcode-page-format').value;
+                const perRow = parseInt(document.getElementById('barcode-per-row').value) || 3;
 
-                doc.setDrawColor(100);
-                doc.rect(x, y, itemWidth - 2, itemHeight);
+                let pageWidth = 210, pageHeight = 297; // A4 default
+                if (format === 'letter') { pageWidth = 215.9; pageHeight = 279.4; }
+                if (format === '4x6') { pageWidth = 152.4; pageHeight = 101.6; }
+                if (format === '2x3') { pageWidth = 101.6; pageHeight = 76.2; }
 
-                const barcode = generateBarcode(item.sku, 100, 15);
-                doc.setFontSize(8);
-                doc.text(barcode, x + itemWidth / 2 - 10, y + 5, { align: 'center', maxWidth: itemWidth - 4 });
-                doc.setFontSize(7);
-                doc.setFont('helvetica', 'bold');
-                doc.text(item.sku, x + itemWidth / 2, y + itemHeight - 10, { align: 'center' });
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(6);
-                doc.text(item.name.substring(0, 15), x + itemWidth / 2, y + itemHeight - 6, { align: 'center', maxWidth: itemWidth - 4 });
+                const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [pageWidth, pageHeight] });
+                const margin = 5;
+                const itemWidth = (pageWidth - margin * 2) / perRow;
+                const itemHeight = itemWidth * 0.8;
 
-                x += itemWidth;
-                itemCount++;
+                let x = margin, y = margin;
+                let itemCount = 0;
 
-                if (itemCount % perRow === 0) {
-                    x = margin;
-                    y += itemHeight;
-                }
-            });
+                inventoryData.forEach(item => {
+                    if (y + itemHeight > pageHeight - margin) {
+                        doc.addPage([pageWidth, pageHeight]);
+                        x = margin;
+                        y = margin;
+                    }
 
-            doc.save('Inventory_Barcodes.pdf');
-            showToast('✓ Barcode PDF downloaded');
+                    doc.setDrawColor(100);
+                    doc.rect(x, y, itemWidth - 2, itemHeight);
+
+                    const barcode = generateBarcode(item.sku, 100, 15);
+                    doc.setFontSize(8);
+                    doc.text(barcode, x + itemWidth / 2 - 10, y + 5, { align: 'center', maxWidth: itemWidth - 4 });
+                    doc.setFontSize(7);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(item.sku, x + itemWidth / 2, y + itemHeight - 10, { align: 'center' });
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(6);
+                    doc.text(item.name.substring(0, 15), x + itemWidth / 2, y + itemHeight - 6, { align: 'center', maxWidth: itemWidth - 4 });
+
+                    x += itemWidth;
+                    itemCount++;
+
+                    if (itemCount % perRow === 0) {
+                        x = margin;
+                        y += itemHeight;
+                    }
+                });
+
+                doc.save('Inventory_Barcodes.pdf');
+                showToast('✓ Barcode PDF downloaded');
+            } catch (err) {
+                showToast('Error generating PDF: ' + err.message);
+                console.error(err);
+            }
         }
 
         function showInventoryAnalysis() {
@@ -2350,49 +2578,66 @@
         function downloadCategoryAnalysisPDF() {
             if (inventoryData.length === 0) { showToast('No data'); return; }
             
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // Calculate stats
-            const categoryStats = {};
-            inventoryData.forEach(item => {
-                if (!categoryStats[item.category]) {
-                    categoryStats[item.category] = { items: 0, quantity: 0, value: 0 };
+            try {
+                if (!window.jspdf || !window.jspdf.jsPDF) {
+                    showToast('PDF library not available');
+                    return;
                 }
-                categoryStats[item.category].items++;
-                categoryStats[item.category].quantity += item.quantity;
-                categoryStats[item.category].value += (item.quantity * parseFloat(item.unit_cost));
-            });
+                
+                const jsPDF = window.jspdf.jsPDF;
+                const doc = new jsPDF();
+                
+                // Calculate stats
+                const categoryStats = {};
+                inventoryData.forEach(item => {
+                    if (!categoryStats[item.category]) {
+                        categoryStats[item.category] = { items: 0, quantity: 0, value: 0 };
+                    }
+                    categoryStats[item.category].items++;
+                    categoryStats[item.category].quantity += item.quantity;
+                    categoryStats[item.category].value += (item.quantity * parseFloat(item.unit_cost));
+                });
 
-            const categories = Object.keys(categoryStats).sort((a, b) => categoryStats[b].value - categoryStats[a].value);
-            const totalValue = Object.values(categoryStats).reduce((sum, c) => sum + c.value, 0);
+                const categories = Object.keys(categoryStats).sort((a, b) => categoryStats[b].value - categoryStats[a].value);
+                const totalValue = Object.values(categoryStats).reduce((sum, c) => sum + c.value, 0);
 
-            doc.setFontSize(16);
-            doc.text('CATEGORY ANALYSIS REPORT', 15, 15);
-            doc.setFontSize(10);
-            doc.text(`Generated: ${new Date().toLocaleString()}`, 15, 25);
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.text('CATEGORY ANALYSIS REPORT', 15, 15);
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Generated: ${new Date().toLocaleString()}`, 15, 25);
 
-            const tableData = categories.map(cat => {
-                const stats = categoryStats[cat];
-                const avgCost = (stats.value / stats.quantity).toFixed(2);
-                const percentage = ((stats.value / totalValue) * 100).toFixed(1);
-                return [cat, stats.items, stats.quantity, '$' + avgCost, '$' + stats.value.toFixed(2), percentage + '%'];
-            });
+                const tableData = categories.map(cat => {
+                    const stats = categoryStats[cat];
+                    const avgCost = (stats.value / stats.quantity).toFixed(2);
+                    const percentage = ((stats.value / totalValue) * 100).toFixed(1);
+                    return [cat, stats.items.toString(), stats.quantity.toString(), '₹' + avgCost, '₹' + stats.value.toFixed(2), percentage + '%'];
+                });
 
-            doc.autoTable({
-                startY: 35,
-                head: [['Category', 'Items', 'Qty', 'Avg Cost', 'Total Value', '% Share']],
-                body: tableData
-            });
+                doc.autoTable({
+                    startY: 35,
+                    head: [['Category', 'Items', 'Qty', 'Avg Cost', 'Total Value', '% Share']],
+                    body: tableData,
+                    theme: 'grid',
+                    headStyles: { fillColor: [14, 165, 233], textColor: 255, fontStyle: 'bold', fontSize: 10 },
+                    bodyStyles: { fontSize: 9, cellPadding: 3 },
+                    margin: { left: 15, right: 15 }
+                });
 
-            const totalQty = Object.values(categoryStats).reduce((sum, c) => sum + c.quantity, 0);
-            doc.setFontSize(10);
-            doc.text(`Total Categories: ${categories.length}`, 15, doc.internal.pageSize.height - 30);
-            doc.text(`Total Value: ₹${totalValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`, 15, doc.internal.pageSize.height - 20);
-            doc.text(`Total Quantity: ${totalQty}`, 15, doc.internal.pageSize.height - 10);
+                const totalQty = Object.values(categoryStats).reduce((sum, c) => sum + c.quantity, 0);
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`Total Categories: ${categories.length}`, 15, doc.internal.pageSize.height - 30);
+                doc.text(`Total Value: ₹${totalValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`, 15, doc.internal.pageSize.height - 20);
+                doc.text(`Total Quantity: ${totalQty}`, 15, doc.internal.pageSize.height - 10);
 
-            doc.save('Category_Analysis.pdf');
-            showToast('✓ Report downloaded');
+                doc.save('Category_Analysis.pdf');
+                showToast('✓ Report downloaded');
+            } catch (err) {
+                showToast('Error generating PDF: ' + err.message);
+                console.error(err);
+            }
         }
 
         // FAST UPDATE FUNCTIONS
@@ -2874,5 +3119,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f1861c1d1c571b6',t:'MTc3NzA2ODAzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f188651353f20fe',t:'MTc3NzA2OTUzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
