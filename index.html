@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Warehouse Management System</title>
+  <title>Warehouse Management System - WMS Pro</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -553,7 +553,7 @@
      </div><!-- REPORTS PAGE -->
      <div class="page" id="reports">
       <div class="grid-2">
-       <button class="btn btn-primary" onclick="showInventoryAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="chart-bar" style="width: 20px; height: 20px;"></i> Inventory Analysis </button> <button class="btn btn-primary" onclick="showLowStockAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="alert-triangle" style="width: 20px; height: 20px;"></i> Low Stock Analysis </button> <button class="btn btn-primary" onclick="exportLowStockReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="download" style="width: 20px; height: 20px;"></i> Low Stock Report </button> <button class="btn btn-primary" onclick="exportInventoryReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="download" style="width: 20px; height: 20px;"></i> Inventory Report </button> <button class="btn btn-primary" onclick="exportInboundReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="arrow-down" style="width: 20px; height: 20px;"></i> Inbound Report </button> <button class="btn btn-primary" onclick="exportOutboundReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="arrow-up" style="width: 20px; height: 20px;"></i> Outbound Report </button> <button class="btn btn-primary" onclick="showBarcodeModal()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="barcode" style="width: 20px; height: 20px;"></i> Print Barcodes </button> <button class="btn btn-primary" onclick="showCategoryAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="pie-chart" style="width: 20px; height: 20px;"></i> Category Analysis </button> <button class="btn btn-primary" onclick="showFastUpdate()" style="padding: 16px; justify-content: center; font-size: 14px; background: linear-gradient(135deg, #8b5cf6, #6366f1);"> <i data-lucide="zap" style="width: 20px; height: 20px;"></i> Fast Update </button>
+       <button class="btn btn-primary" onclick="showInventoryAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="chart-bar" style="width: 20px; height: 20px;"></i> Inventory Analysis </button> <button class="btn btn-primary" onclick="showLowStockAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="alert-triangle" style="width: 20px; height: 20px;"></i> Low Stock Analysis </button> <button class="btn btn-primary" onclick="exportLowStockReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="download" style="width: 20px; height: 20px;"></i> Low Stock Report </button> <button class="btn btn-primary" onclick="exportInventoryReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="download" style="width: 20px; height: 20px;"></i> Inventory Report </button> <button class="btn btn-primary" onclick="exportInboundReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="arrow-down" style="width: 20px; height: 20px;"></i> Inbound Report </button> <button class="btn btn-primary" onclick="exportOutboundReport()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="arrow-up" style="width: 20px; height: 20px;"></i> Outbound Report </button> <button class="btn btn-primary" onclick="showBarcodeModal()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="barcode" style="width: 20px; height: 20px;"></i> Print Barcodes </button> <button class="btn btn-primary" onclick="showCategoryAnalysis()" style="padding: 16px; justify-content: center; font-size: 14px;"> <i data-lucide="pie-chart" style="width: 20px; height: 20px;"></i> Category Analysis </button> <button class="btn btn-primary" onclick="showGitHubBackupModal()" style="padding: 16px; justify-content: center; font-size: 14px; background: linear-gradient(135deg, #6366f1, #3b82f6);"> <i data-lucide="github" style="width: 20px; height: 20px;"></i> Export to GitHub </button> <button class="btn btn-primary" onclick="showFastUpdate()" style="padding: 16px; justify-content: center; font-size: 14px; background: linear-gradient(135deg, #8b5cf6, #6366f1);"> <i data-lucide="zap" style="width: 20px; height: 20px;"></i> Fast Update </button>
       </div>
       <div id="analysis-container"></div>
      </div><!-- FAST UPDATE MODAL -->
@@ -597,6 +597,49 @@
        </div>
        <div id="barcode-preview" style="background: white; border: 1px solid #ccc; border-radius: 4px; padding: 20px; margin-bottom: 16px; display: grid; gap: 10px; color: black; font-size: 12px; font-family: monospace;"></div>
        <div style="display: flex; gap: 8px; justify-content: flex-end;"><button class="btn btn-primary" onclick="printBarcodes()"> <i data-lucide="printer" style="width: 16px; height: 16px;"></i> Print </button> <button class="btn btn-secondary" onclick="downloadBarcodesPDF()"> <i data-lucide="download" style="width: 16px; height: 16px;"></i> Download PDF </button>
+       </div>
+      </div>
+     </div><!-- GITHUB BACKUP MODAL -->
+     <div id="github-backup-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 2000; overflow-y: auto; padding: 20px;">
+      <div style="background: #1e293b; border-radius: 8px; max-width: 600px; margin: 0 auto; border: 1px solid rgba(148, 163, 184, 0.2); padding: 24px;">
+       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="color: #f1f5f9; font-size: 18px; font-weight: 600;">☁️ Export to GitHub</h3><button class="btn btn-secondary" onclick="closeGitHubBackupModal()"> <i data-lucide="x" style="width: 16px; height: 16px;"></i> Close </button>
+       </div>
+       <div style="background: rgba(99, 102, 241, 0.1); border-radius: 8px; padding: 16px; margin-bottom: 20px; border-left: 4px solid #6366f1;">
+        <p style="color: #cbd5e1; font-size: 13px; margin: 0;"><strong>🔐 Secure Cloud Backup:</strong> Save your WMS data to GitHub with version control. Your data will be stored as JSON files in your private repository.</p>
+       </div>
+       <div style="background: rgba(51, 65, 85, 0.3); border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+        <p style="color: #cbd5e1; font-weight: 600; margin-bottom: 12px; font-size: 13px;">1️⃣ GitHub Setup (First Time Only)</p>
+        <ol style="color: #94a3b8; font-size: 12px; margin: 0; padding-left: 20px; line-height: 1.8;">
+         <li>Create a <strong>new GitHub repository</strong> at <a href="https://github.com/new" target="_blank" style="color: #0ea5e9;">github.com/new</a></li>
+         <li>Name it something like <strong>wms-pro-backup</strong></li>
+         <li>Make it <strong>Private</strong> for security</li>
+         <li>Create a Personal Access Token at <a href="https://github.com/settings/tokens" target="_blank" style="color: #0ea5e9;">github.com/settings/tokens</a></li>
+         <li>Give it <strong>"repo"</strong> scope permissions</li>
+         <li>Copy the token and paste it below</li>
+        </ol>
+       </div>
+       <div class="form-row">
+        <div class="input-group">
+         <label class="input-label">GitHub Username</label> <input type="text" id="github-username" class="input-field" placeholder="your-github-username">
+        </div>
+        <div class="input-group">
+         <label class="input-label">Repository Name</label> <input type="text" id="github-repo" class="input-field" placeholder="wms-pro-backup">
+        </div>
+       </div>
+       <div class="input-group">
+        <label class="input-label">Personal Access Token</label> <input type="password" id="github-token" class="input-field" placeholder="ghp_xxxxxxxxxxxx">
+       </div>
+       <div style="background: rgba(51, 65, 85, 0.3); border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+        <p style="color: #cbd5e1; font-weight: 600; margin-bottom: 12px; font-size: 13px;">📦 Select Data to Export</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;">
+         <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="gh-inventory" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 12px;">📦 Inventory</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="gh-inbound" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 12px;">⬇️ Inbound</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="gh-outbound" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 12px;">⬆️ Outbound</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="gh-return" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 12px;">🔄 Returns</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="gh-grn" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 12px;">📋 GRN</span> </label> <label style="display: flex; align-items: center; padding: 10px; background: rgba(14, 165, 233, 0.2); border-radius: 4px; cursor: pointer; border: 2px solid rgba(14, 165, 233, 0.5);"> <input type="checkbox" id="gh-users" checked style="margin-right: 8px; cursor: pointer;"> <span style="color: #cbd5e1; font-size: 12px;">👥 Users</span> </label>
+        </div>
+       </div>
+       <div id="github-backup-status" style="display: none; background: rgba(51, 65, 85, 0.5); border-radius: 8px; padding: 16px; margin-bottom: 20px; border-left: 4px solid #0ea5e9;">
+        <div id="github-status-text" style="color: #cbd5e1; font-size: 13px; line-height: 1.6;"></div>
+       </div>
+       <div style="display: flex; gap: 8px; justify-content: flex-end;"><button class="btn btn-secondary" onclick="closeGitHubBackupModal()"> Cancel </button> <button class="btn btn-primary" id="github-backup-submit" onclick="exportToGitHub()" style="background: linear-gradient(135deg, #6366f1, #3b82f6);"> <i data-lucide="github" style="width: 16px; height: 16px;"></i> Export to GitHub </button>
        </div>
       </div>
      </div><!-- USERS PAGE -->
@@ -645,6 +688,32 @@
    </div>
   </div>
   <script>
+        // ============================================
+        // WMS PRO - DATA STORAGE & MANAGEMENT GUIDE
+        // ============================================
+        // 
+        // YOUR DATA IS STORED IN THREE WAYS:
+        // 1. TEMPORARY: Browser memory (session only)
+        // 2. PERMANENT: Canva Sheet (persistent, max 999 records)
+        // 3. GITHUB BACKUP: Version control & cloud backup
+        //
+        // WHEN YOU UPLOAD CSV FILES:
+        // - Data is automatically saved to Canva Sheet
+        // - Each entry gets a unique ID (__backendId)
+        // - Data persists even after closing the browser
+        //
+        // TO VIEW YOUR DATA:
+        // - Click "Data" button above this Canva Code
+        // - Your Canva Sheet shows all stored records
+        //
+        // TO BACKUP TO GITHUB:
+        // 1. Click "Export to GitHub" button in Reports
+        // 2. Select data types to export
+        // 3. Follow setup instructions (one-time)
+        // 4. Data automatically syncs to your GitHub repo
+        //
+        // ============================================
+        
         let inventoryData = [];
         let inboundData = [];
         let outboundData = [];
@@ -2703,7 +2772,6 @@
             }
         }
 
-        // FAST UPDATE FUNCTIONS
         function showFastUpdate() {
             document.getElementById('fast-update-modal').style.display = 'block';
             document.getElementById('fast-update-files').addEventListener('change', handleFastUpdateFileSelect);
@@ -3181,6 +3249,132 @@
                 fileInput.addEventListener('change', handleInventoryFastUploadFileSelect);
             }
         });
+
+        // GITHUB BACKUP FUNCTIONS
+        function showGitHubBackupModal() {
+            document.getElementById('github-backup-modal').style.display = 'block';
+        }
+
+        function closeGitHubBackupModal() {
+            document.getElementById('github-backup-modal').style.display = 'none';
+            document.getElementById('github-backup-status').style.display = 'none';
+            document.getElementById('github-status-text').textContent = '';
+        }
+
+        async function exportToGitHub() {
+            const username = document.getElementById('github-username').value.trim();
+            const repo = document.getElementById('github-repo').value.trim();
+            const token = document.getElementById('github-token').value.trim();
+
+            if (!username || !repo || !token) {
+                showToast('❌ Please fill GitHub username, repo name, and token');
+                return;
+            }
+
+            // Get selected data types
+            const exportInventory = document.getElementById('gh-inventory').checked;
+            const exportInbound = document.getElementById('gh-inbound').checked;
+            const exportOutbound = document.getElementById('gh-outbound').checked;
+            const exportReturn = document.getElementById('gh-return').checked;
+            const exportGRN = document.getElementById('gh-grn').checked;
+            const exportUsers = document.getElementById('gh-users').checked;
+
+            if (!exportInventory && !exportInbound && !exportOutbound && !exportReturn && !exportGRN && !exportUsers) {
+                showToast('❌ Select at least one data type to export');
+                return;
+            }
+
+            // Show status
+            const statusDiv = document.getElementById('github-backup-status');
+            const statusText = document.getElementById('github-status-text');
+            statusDiv.style.display = 'block';
+            statusText.innerHTML = '⏳ Preparing data for GitHub...';
+
+            const submitBtn = document.getElementById('github-backup-submit');
+            submitBtn.disabled = true;
+
+            try {
+                // Prepare export data
+                const exportData = {};
+                if (exportInventory) exportData.inventory = inventoryData;
+                if (exportInbound) exportData.inbound = inboundData;
+                if (exportOutbound) exportData.outbound = outboundData;
+                if (exportReturn) exportData.returns = returnData;
+                if (exportGRN) exportData.grn = grnData;
+                if (exportUsers) exportData.users = usersData;
+
+                // Create JSON content
+                const timestamp = new Date().toISOString();
+                const jsonContent = JSON.stringify({
+                    backup_date: timestamp,
+                    exported_by: 'WMS Pro',
+                    data: exportData,
+                    total_records: Object.values(exportData).reduce((sum, arr) => sum + arr.length, 0)
+                }, null, 2);
+
+                statusText.innerHTML = '📤 Pushing to GitHub...';
+
+                // Try to create/update file in GitHub repo
+                const fileName = `wms-backup-${new Date().getTime()}.json`;
+                const fileContent = btoa(jsonContent); // Base64 encode
+
+                // GitHub API call to create/update file
+                const response = await fetch(
+                    `https://api.github.com/repos/${username}/${repo}/contents/${fileName}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: `WMS Pro Backup - ${timestamp}`,
+                            content: fileContent,
+                            branch: 'main'
+                        })
+                    }
+                );
+
+                if (response.ok) {
+                    statusText.innerHTML = `✅ <strong>Success!</strong> Your data has been backed up to GitHub.<br><br>
+                        📊 Records Exported:<br>
+                        ${exportInventory ? `• Inventory: ${inventoryData.length}<br>` : ''}
+                        ${exportInbound ? `• Inbound: ${inboundData.length}<br>` : ''}
+                        ${exportOutbound ? `• Outbound: ${outboundData.length}<br>` : ''}
+                        ${exportReturn ? `• Returns: ${returnData.length}<br>` : ''}
+                        ${exportGRN ? `• GRN: ${grnData.length}<br>` : ''}
+                        ${exportUsers ? `• Users: ${usersData.length}<br>` : ''}
+                        <br>📁 File: <code style="background: rgba(0,0,0,0.3); padding: 2px 4px;">${fileName}</code><br>
+                        🔗 View: <a href="https://github.com/${username}/${repo}/blob/main/${fileName}" target="_blank" style="color: #0ea5e9; text-decoration: underline;">github.com/${username}/${repo}</a>`;
+                    showToast('✓ Backup to GitHub successful!');
+                    
+                    // Reset form after 3 seconds
+                    setTimeout(() => {
+                        document.getElementById('github-username').value = '';
+                        document.getElementById('github-repo').value = '';
+                        document.getElementById('github-token').value = '';
+                        statusDiv.style.display = 'none';
+                        submitBtn.disabled = false;
+                    }, 5000);
+                } else {
+                    const errorData = await response.json();
+                    statusText.innerHTML = `❌ <strong>Error:</strong> ${errorData.message || 'Failed to push to GitHub'}<br><br>
+                        💡 <strong>Troubleshooting:</strong><br>
+                        • Verify username is correct<br>
+                        • Check repo exists and is accessible<br>
+                        • Token must have 'repo' scope<br>
+                        • Visit <a href="https://github.com/settings/tokens" target="_blank" style="color: #0ea5e9;">github.com/settings/tokens</a> to check`;
+                    showToast('❌ GitHub push failed');
+                    submitBtn.disabled = false;
+                }
+            } catch (err) {
+                statusText.innerHTML = `❌ <strong>Error:</strong> ${err.message}<br><br>
+                    💡 <strong>Note:</strong> Make sure you have created a repository on GitHub first.`;
+                showToast('❌ Error: ' + err.message);
+                submitBtn.disabled = false;
+            }
+        }
+
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f188f05d3b420fe',t:'MTc3NzA2OTg5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f18aed005e62666',t:'MTc3NzA3MTE5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
